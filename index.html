@@ -14,9 +14,9 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:400 15px/1.55 var(--f)}
 header{background:var(--hd);color:var(--hdtx);padding:20px 16px 0}
 .wrap{max-width:1080px;margin:0 auto}
-.org{font-size:13px;font-weight:500;opacity:.85;letter-spacing:.02em}
-h1{margin:2px 0 4px;font-size:26px;line-height:1.2;font-weight:700}
-.sub{margin:0 0 14px;font-size:14px;opacity:.85}
+.org{font-size:18px;font-weight:700;color:#ffd54f;text-transform:uppercase;letter-spacing:.03em}
+h1{margin:2px 0 4px;font-size:26px;line-height:1.2;font-weight:700;color:#ffd54f}
+.sub{margin:0 0 14px;font-size:14px;color:#ffd54f}
 nav{display:flex;gap:2px;overflow-x:auto}
 nav button{font:500 14px var(--f);color:var(--hdtx);background:transparent;border:0;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;opacity:.8;white-space:nowrap}
 nav button[aria-selected=true]{opacity:1;border-bottom-color:#fff}
@@ -41,6 +41,11 @@ td.n,th.n{text-align:right}
 tr.row{cursor:pointer}tr.row:hover{background:var(--bg)}
 tr:last-child td{border-bottom:0}
 .zero{color:var(--mu)}
+td.un{font-weight:700;color:#000}
+td.sn{font-weight:700;color:#c28a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) td.un{color:var(--tx)}:root:not([data-theme="light"]) td.sn{color:#ffd54f}}
+:root[data-theme="dark"] td.un{color:var(--tx)}
+:root[data-theme="dark"] td.sn{color:#ffd54f}
 .hint{margin:-4px 0 10px;font-size:13px;color:var(--mu)}
 .num{background:none;border:0;font:600 14px var(--f);cursor:pointer;padding:2px 8px;border-radius:4px;color:var(--tx);text-decoration:underline;text-underline-offset:3px}
 .num:hover{background:var(--bg)}
@@ -150,7 +155,7 @@ function unitHtml(){
  var h='<h2>Đơn vị chủ trì có nhiệm vụ quá hạn, đến hạn</h2><p class="hint">Bấm vào số để mở danh sách nhiệm vụ tương ứng</p><div class="panel"><table><thead><tr><th>Đơn vị chủ trì</th><th class="n">Tổng</th><th class="n">Quá hạn</th><th class="n">Đến hạn 7 ngày</th></tr></thead><tbody>';
  UNITS.forEach(function(u){var L=tasks.filter(function(t){return unitsOf(t)[u[0]]}),r=count(L);
   function cell(n,st,c){return'<td class="n'+(n?'':' zero')+'">'+(n?'<button class="num" data-ut="'+u[0]+'" data-st="'+st+'"'+(c?' style="color:'+c+'"':'')+' aria-label="'+esc(u[1])+': '+n+' nhiệm vụ">'+n+'</button>':'0')+'</td>'}
-  h+='<tr><td>'+esc(u[1])+'</td>'+cell(r.all,"","")+cell(r.over,"over","var(--over)")+cell(r.soon,"soon","var(--soon)")+'</tr>'});
+  h+='<tr><td class="un">'+esc(u[1])+'</td>'+cell(r.all,"","")+cell(r.over,"over","var(--over)")+cell(r.soon,"soon","var(--soon)")+'</tr>'});
  return h+'</tbody></table></div>'}
 
 function renderOv(){
@@ -159,7 +164,7 @@ function renderOv(){
   h+='<button class="stat" data-st="'+s[0]+'" style="--c:'+(s[0]?col(s[0]):"var(--tx)")+'"><b>'+s[2]+'</b><span>'+s[1]+'</span></button>'});
  h+='</div><h2>Nhiệm vụ theo nguồn giao</h2><div class="panel"><table><thead><tr><th>Nguồn giao</th><th class="n">Tổng</th><th class="n">Quá hạn</th><th class="n">Đến hạn 7 ngày</th><th class="n">Trong hạn</th><th class="n">Hoàn thành</th></tr></thead><tbody>';
  SRC.forEach(function(s){var r=count(tasks.filter(function(t){return t.src===s}));
-  h+='<tr class="row" data-src="'+esc(s)+'"><td>'+esc(s)+'</td>'+["all","over","soon","ok","done"].map(function(k){return'<td class="n'+(r[k]?'':' zero')+'">'+r[k]+'</td>'}).join("")+'</tr>'});
+  h+='<tr class="row" data-src="'+esc(s)+'"><td class="sn">'+esc(s)+'</td>'+["all","over","soon","ok","done"].map(function(k){return'<td class="n'+(r[k]?'':' zero')+'">'+r[k]+'</td>'}).join("")+'</tr>'});
  h+='</tbody></table></div>'+unitHtml()+'<h2>Hạn hoàn thành theo tháng</h2><div class="panel">';
  var mm={};tasks.forEach(function(t){if(t.due){var k=t.due.slice(0,7);(mm[k]=mm[k]||[]).push(t)}});
  var ks=Object.keys(mm).sort();
